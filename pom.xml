@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>diziaq</groupId>
+  <artifactId>spring-properties-lookup</artifactId>
+  <version>0.0.1</version>
+  <packaging>jar</packaging>
+
+  <properties>
+    <version.java>11</version.java>
+    <version.spring.boot>2.2.7.RELEASE</version.spring.boot>
+
+    <version.plugin.maven.compiler>3.8.1</version.plugin.maven.compiler>
+
+    <encoding.source.code>UTF-8</encoding.source.code>
+    <encoding.resources>UTF-8</encoding.resources>
+
+    <project.build.sourceEncoding>${encoding.source.code}</project.build.sourceEncoding>
+
+    <result.main.class.name>dzq.sandbox.spring.app.propmanage.SampleApplication</result.main.class.name>
+    <result.jar.name>dzq_sample_spring_props</result.jar.name>
+
+    <spring.boot.jvm.arguments></spring.boot.jvm.arguments><!-- empty by default -->
+  </properties>
+
+  <profiles>
+    <profile>
+      <id>debug</id>
+      <properties>
+        <spring.boot.jvm.arguments>
+          -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+        </spring.boot.jvm.arguments>
+      </properties>
+    </profile>
+  </profiles>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>${version.spring.boot}</version>
+        <configuration>
+          <jvmArguments>${spring.boot.jvm.arguments}</jvmArguments>
+          <mainClass>${result.main.class.name}</mainClass>
+          <layout>ZIP</layout>
+          <finalName>${result.jar.name}</finalName>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${version.plugin.maven.compiler}</version>
+        <configuration>
+          <encoding>${encoding.source.code}</encoding>
+          <compilerVersion>${version.java}</compilerVersion>
+          <release>${version.java}</release>
+          <source>${version.java}</source>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>${version.spring.boot}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-webflux</artifactId>
+    </dependency>
+  </dependencies>
+
+</project>
