@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- when using this file as a standalone config, consider renaming tag `included` to `configuration`-->
+<included>
+
+  <!-- properties -->
+
+  <springProperty scope="context" name="LOG_LEVEL_ROOT" source="logback.level.root"/>
+  <springProperty scope="context" name="LOG_LEVEL_SPRING" source="logback.level.spring"/>
+  <springProperty scope="context" name="LOG_LEVEL_APP" source="logback.level.app"/>
+  <springProperty scope="context" name="LOG_FILE_STORAGE_PATH" source="logback.file.storage.path"/>
+  <springProperty scope="context" name="LOG_FILE_NAME_PREFIX" source="logback.file.name.prefix"/>
+
+  <property name="logEntryPatternSimple"
+            value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%-21.25thread] [%-5level] %logger{20} - %msg%n"/>
+
+  <!-- appenders -->
+
+  <appender name="ALL_TO_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>${logEntryPatternSimple}</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="ALL_TO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>TRACE</level>
+    </filter>
+    <file>${LOG_FILE_STORAGE_PATH}/ALL/${LOG_FILE_NAME_PREFIX}_ALL.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <fileNamePattern>
+        ${LOG_FILE_STORAGE_PATH}/ALL/${LOG_FILE_NAME_PREFIX}_ALL.log.%i.%d{yyyy_MM_dd}.backup.zip
+      </fileNamePattern>
+      <maxFileSize>5MB</maxFileSize>
+      <totalSizeCap>200MB</totalSizeCap>
+    </rollingPolicy>
+    <encoder>
+      <pattern>${logEntryPatternSimple}</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="CRITICAL_TO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <append>true</append>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>WARN</level>
+    </filter>
+    <file>${LOG_FILE_STORAGE_PATH}/CRITICAL/${LOG_FILE_NAME_PREFIX}_CRITICAL.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <fileNamePattern>
+        ${LOG_FILE_STORAGE_PATH}/CRITICAL/${LOG_FILE_NAME_PREFIX}_CRITICAL.log.%i.%d{yyyy_MM_dd}.backup.zip
+      </fileNamePattern>
+      <maxFileSize>5MB</maxFileSize>
+      <totalSizeCap>900MB</totalSizeCap>
+    </rollingPolicy>
+    <encoder>
+      <pattern>${logEntryPatternSimple}</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="WATCH_TO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <append>true</append>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>ALL</level>
+    </filter>
+    <file>${LOG_FILE_STORAGE_PATH}/WATCH/${LOG_FILE_NAME_PREFIX}_WATCH.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <fileNamePattern>
+        ${LOG_FILE_STORAGE_PATH}/WATCH/${LOG_FILE_NAME_PREFIX}_WATCH.log.%i.%d{yyyy_MM_dd}.backup.zip
+      </fileNamePattern>
+      <maxFileSize>1MB</maxFileSize>
+      <totalSizeCap>100MB</totalSizeCap>
+    </rollingPolicy>
+    <encoder>
+      <pattern>${logEntryPatternSimple}</pattern>
+    </encoder>
+  </appender>
+
+  <!-- loggers -->
+
+  <root level="${LOG_LEVEL_ROOT}">
+    <appender-ref ref="ALL_TO_CONSOLE"/>
+    <appender-ref ref="CRITICAL_TO_FILE"/>
+  </root>
+
+  <logger name="org.springframework" additivity="false" level="${LOG_LEVEL_SPRING}">
+    <appender-ref ref="ALL_TO_CONSOLE"/>
+    <appender-ref ref="ALL_TO_FILE"/>
+    <appender-ref ref="CRITICAL_TO_FILE"/>
+  </logger>
+
+  <logger name="dzq.sandbox" additivity="false" level="${LOG_LEVEL_APP}">
+    <appender-ref ref="ALL_TO_CONSOLE"/>
+    <appender-ref ref="ALL_TO_FILE"/>
+    <appender-ref ref="CRITICAL_TO_FILE"/>
+  </logger>
+
+  <logger name="WATCH" additivity="false" level="${LOG_LEVEL_APP}">
+    <appender-ref ref="ALL_TO_CONSOLE"/>
+    <appender-ref ref="WATCH_TO_FILE"/>
+  </logger>
+</included>

@@ -1,0 +1,51 @@
+logback:
+  graylog:
+    field:
+      environment: Dev
+      origin:
+        host: dev-curlydoll-dummy-host
+management:
+  endpoint:
+    health:
+      show-details: always
+    metrics:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: info,health,metrics,loggers,beans
+  metrics:
+    export:
+      statsd:
+        enabled: true
+        flavor: telegraf
+        host: localhost
+        port: 8125
+server:
+  error:
+    include-stacktrace: always
+spring:
+  application:
+    name: curlydoll-2020
+  boot:
+    admin:
+      client:
+        instance:
+          metadata:
+            user:
+              name: ${spring.security.user.name}
+              password: ${spring.security.user.password}
+        password: admin
+        url: http://localhost:8989
+        username: admin
+  cache:
+    caffeine:
+      spec: maximumSize=500, expireAfterWrite=60s
+  jackson:
+    default-property-inclusion: NON_NULL
+    serialization:
+      write-dates-as-timestamps: true
+  security:
+    user:
+      name: client
+      password: client

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <!-- this file should not be changed -->
+  <!-- set up logging configuration in "logging/logback-sandbox-base.xml" -->
+  <include resource="logging/logback-sandbox-base.xml"/>
+</configuration>
