@@ -10,4 +10,8 @@ public interface Description<T> {
   static Description<String> asString(PropAssembly assembly) {
     return new PropDescriptionAsString(assembly);
   }
+
+  static Description<Map<String, Object>> asMap(PropAssembly assembly) {
+    return new PropDescriptionAsMap(assembly);
+  }
 }
